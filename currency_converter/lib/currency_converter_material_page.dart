@@ -14,6 +14,12 @@ class _CurrencyConverterMaterialPageState
   TextEditingController textEditingController = TextEditingController();
 
   @override
+  void dispose() {
+    textEditingController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final border = OutlineInputBorder(
       borderSide: const BorderSide(
@@ -39,7 +45,7 @@ class _CurrencyConverterMaterialPageState
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Text(
-                'LKR ${result!=0 ? result.toStringAsFixed(2): '0'}',
+                'LKR ${result != 0 ? result.toStringAsFixed(2) : '0'}',
                 style: const TextStyle(
                     fontSize: 55,
                     fontWeight: FontWeight.bold,
