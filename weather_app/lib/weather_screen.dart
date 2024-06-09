@@ -57,8 +57,6 @@ class _WeatherScreenState extends State<WeatherScreen> {
       body: FutureBuilder(
           future: getCurrentWeather(),
           builder: (context, snapshot) {
-            print(snapshot);
-
             if (snapshot.connectionState == ConnectionState.waiting) {
               return const Center(
                 child: CircularProgressIndicator.adaptive(),
@@ -83,6 +81,9 @@ class _WeatherScreenState extends State<WeatherScreen> {
             final currentTemp = currentWeatherData['main']['temp'];
             final currentWeather = currentWeatherData['weather'][0]['main'];
 
+            final currentHumidity = currentWeatherData['main']['humidity'];
+            final currentWindSpeed = currentWeatherData['wind']['speed'];
+            final currentPressure = currentWeatherData['main']['pressure'];
 
             return Padding(
               padding: const EdgeInsets.all(16.0),
@@ -143,47 +144,28 @@ class _WeatherScreenState extends State<WeatherScreen> {
                   const Align(
                     alignment: Alignment.centerLeft,
                     child: Text(
-                      'Weather Forecast',
+                      'Hourly Forecast',
                       style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
                   ),
-                  const SingleChildScrollView(
+                  SingleChildScrollView(
                     scrollDirection: Axis.horizontal,
                     child: Row(
                       children: [
-                        HourlyForecastItem(
-                          time: '09:00',
-                          icon: Icons.cloud,
-                          temperature: 273.2,
-                        ),
-                        HourlyForecastItem(
-                          time: '12:00',
-                          icon: Icons.sunny,
-                          temperature: 273.2,
-                        ),
-                        HourlyForecastItem(
-                          time: '03:00',
-                          icon: Icons.cloudy_snowing,
-                          temperature: 273.2,
-                        ),
-                        HourlyForecastItem(
-                          time: '06:00',
-                          icon: Icons.cloud,
-                          temperature: 273.2,
-                        ),
-                        HourlyForecastItem(
-                          time: '09:00',
-                          icon: Icons.sunny,
-                          temperature: 273.2,
-                        ),
-                        HourlyForecastItem(
-                          time: '12:00',
-                          icon: Icons.cloudy_snowing,
-                          temperature: 273.2,
-                        ),
+                        for (int i = 0; i < 35; i++)
+                          HourlyForecastItem(
+                            time: data['list'][i + 1]['dt'].toString(),
+                            icon: data['list'][i + 1]['weather'][0]['main'] ==
+                                        'Clouds' ||
+                                    data['list'][i + 1]['weather'][0]['main'] ==
+                                        'Rain'
+                                ? Icons.cloud
+                                : Icons.sunny,
+                            temperature: data['list'][i + 1]['main']['temp'].toString(),
+                          ),
                       ],
                     ),
                   ),
@@ -204,23 +186,23 @@ class _WeatherScreenState extends State<WeatherScreen> {
                   const SizedBox(
                     height: 12,
                   ),
-                  const Row(
+                  Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
                       AdditionalInfoItem(
                         icon: Icons.water_drop,
                         label: 'Humidity',
-                        value: 94,
+                        value: currentHumidity.toString(),
                       ),
                       AdditionalInfoItem(
                         icon: Icons.air,
                         label: 'Wind Speed',
-                        value: 94,
+                        value: currentWindSpeed.toString(),
                       ),
                       AdditionalInfoItem(
                         icon: Icons.beach_access,
                         label: 'Pressure',
-                        value: 94,
+                        value: currentPressure.toString(),
                       ),
                     ],
                   ),
